@@ -11,10 +11,10 @@ router.get("/", async (req: Request, res: Response) => {
     count: items.length,
     products: await Promise.all(
       items.map(async (item) => {
-        let response = await fetch(
+        let resp = await fetch(
           `http://localhost:8080/storage/data/${item.title}`
         );
-        let json = await response.json();
+        let json = await resp.json();
 
         return {
           pid: item.id,
@@ -61,7 +61,18 @@ router.get("/:title", async (req: Request, res: Response) => {
     });
   }
 
-  res.status(200).send(item);
+  let resp = await fetch(`http://localhost:8080/storage/data/${item.title}`);
+  let json = await resp.json();
+
+  res.status(200).send({
+    pid: item.id,
+    title: item.title,
+    desc: item.desc,
+    quantity: item.quantity,
+    price: item.price,
+    type: item.type,
+    image: json.url,
+  });
 });
 
 router.get("/type/:type", async (req: Request, res: Response) => {
@@ -77,17 +88,24 @@ router.get("/type/:type", async (req: Request, res: Response) => {
 
   const response = {
     count: items.length,
-    products: items.map((item) => {
-      return {
-        pid: item.id,
-        quantity: item.quantity,
-        title: item.title,
-        desc: item.desc,
-        price: item.price,
-        type: item.type,
-        image: item.image,
-      };
-    }),
+    products: await Promise.all(
+      items.map(async (item) => {
+        let resp = await fetch(
+          `http://localhost:8080/storage/data/${item.title}`
+        );
+        let json = await resp.json();
+
+        return {
+          pid: item.id,
+          quantity: item.quantity,
+          title: item.title,
+          desc: item.desc,
+          price: item.price,
+          type: item.type,
+          image: json.url,
+        };
+      })
+    ),
   };
 
   res.status(200).send(response);
