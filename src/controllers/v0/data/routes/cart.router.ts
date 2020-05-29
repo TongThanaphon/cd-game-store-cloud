@@ -13,35 +13,35 @@ router.get("/:uid", async (req: Request, res: Response) => {
     res.status(404).send({
       message: "Product not found!",
     });
+  } else {
+    let index = 0;
+    const response = {
+      uid,
+      status: items.status,
+      products: await Promise.all(
+        items.pids.map(async (pid) => {
+          let { title, price } = await Product.findByPk(pid);
+          let quantity = await items.quantities[index];
+
+          index += 1;
+          return {
+            pid,
+            title,
+            quantity,
+            price,
+          };
+        })
+      ),
+    };
+
+    res.status(200).send(response);
   }
-
-  let index = 0;
-  const response = {
-    uid,
-    status: items.status,
-    products: await Promise.all(
-      items.pids.map(async (pid) => {
-        let { title, price } = await Product.findByPk(pid);
-        let quantity = await items.quantities[index];
-
-        index += 1;
-        return {
-          pid,
-          title,
-          quantity,
-          price,
-        };
-      })
-    ),
-  };
-
-  res.status(200).send(response);
 });
 
 router.post("/", async (req: Request, res: Response) => {
   let { uid, pids, quantities, status } = req.body;
 
-  const cart = await Cart.findOne({ where: { uid } });
+  const cart = await Cart.findOne({ where: { uid, status: "looking" } });
 
   if (cart === null) {
     const created = await Cart.create({
