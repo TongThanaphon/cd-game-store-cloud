@@ -12,7 +12,7 @@ router.get("/", async (req: Request, res: Response) => {
     products: await Promise.all(
       items.map(async (item) => {
         let resp = await fetch(
-          `http://localhost:8070/storage/data/${item.image}`
+          `http://ec2-35-175-237-84.compute-1.amazonaws.com:8070/storage/data/${item.image}`
         );
         let json = await resp.json();
 
