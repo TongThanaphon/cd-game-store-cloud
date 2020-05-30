@@ -24,7 +24,7 @@ import { IndexRouter } from "./controllers/v0/router.index";
   });
 
   app.listen(port, () => {
-    console.log(`server running http://localhost:${port}`);
+    console.log(`server running on port ${port}`);
     console.log(`press CTRL+C to stop server`);
   });
 })();
