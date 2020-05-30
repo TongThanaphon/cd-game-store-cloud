@@ -12,7 +12,7 @@ router.get("/", async (req: Request, res: Response) => {
     products: await Promise.all(
       items.map(async (item) => {
         let resp = await fetch(
-          `http://localhost:8080/storage/data/${item.title}`
+          `http://localhost:8070/storage/data/${item.image}`
         );
         let json = await resp.json();
 
@@ -61,7 +61,7 @@ router.get("/:title", async (req: Request, res: Response) => {
     });
   }
 
-  let resp = await fetch(`http://localhost:8080/storage/data/${item.title}`);
+  let resp = await fetch(`http://localhost:8070/storage/data/${item.title}`);
   let json = await resp.json();
 
   res.status(200).send({
@@ -91,7 +91,7 @@ router.get("/type/:type", async (req: Request, res: Response) => {
     products: await Promise.all(
       items.map(async (item) => {
         let resp = await fetch(
-          `http://localhost:8080/storage/data/${item.title}`
+          `http://localhost:8070/storage/data/${item.title}`
         );
         let json = await resp.json();
 
